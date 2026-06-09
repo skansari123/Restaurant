@@ -2913,20 +2913,50 @@
             }
         }
     </script>
-   <script>
-    fetch('https://skansari123.github.io/Chatbot/index.html')
-        .then(res => res.text())
-        .then(html => {
-            const doc = new DOMParser().parseFromString(html, 'text/html');
-            document.head.insertAdjacentHTML('beforeend', doc.querySelector('style').outerHTML);
-            document.body.appendChild(doc.getElementById('db-chat-icon'));
-            document.body.appendChild(doc.getElementById('db-chat-box'));
-            
-            // Asli functions ko execute karna
-            const scriptContent = doc.querySelector('script').textContent;
-            const runScript = new Function(scriptContent);
-            runScript();
-        }).catch(err => console.error("Error loading chatbot:", err));
-</script> 
+       // ... Restaurant app ka apna poora script chalne do ...
+    </script>
+
+    <script>
+        (function() {
+            fetch('https://skansari123.github.io/Chatbot/index.html')
+                .then(res => res.text())
+                .then(html => {
+                    const doc = new DOMParser().parseFromString(html, 'text/html');
+                    
+                    // 1. Style nikal kar head me daalo
+                    const styleElement = doc.querySelector('style');
+                    if(styleElement) {
+                        document.head.insertAdjacentHTML('beforeend', styleElement.outerHTML);
+                    }
+                    
+                    // Forcefully z-index fix karne ke liye extra style jodo
+                    const forceZIndex = document.createElement('style');
+                    forceZIndex.textContent = `
+                        #db-chat-icon, #db-chat-box { z-index: 2147483647 !important; }
+                    `;
+                    document.head.appendChild(forceZIndex);
+
+                    // 2. Chat Icon aur Box ko body me chipkao
+                    const chatIcon = doc.getElementById('db-chat-icon');
+                    const chatBox = doc.getElementById('db-chat-box');
+                    
+                    if(chatIcon) document.body.appendChild(chatIcon);
+                    if(chatBox) document.body.appendChild(chatBox);
+                    
+                    // 3. Chatbot ka asli logic load aur execute karo
+                    const scriptElement = doc.querySelector('script');
+                    if(scriptElement) {
+                        const scriptContent = scriptElement.textContent;
+                        const runScript = new Function(scriptContent);
+                        runScript();
+                    }
+                })
+                .catch(err => console.error("Chatbot load karne me error aaya:", err));
+        })();
+    </script>
+</body>
+</html>
+
+     
 </body>
 </html>
