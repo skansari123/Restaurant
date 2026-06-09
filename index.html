@@ -2913,5 +2913,20 @@
             }
         }
     </script>
+   <script>
+    fetch('https://skansari123.github.io/Chatbot/index.html')
+        .then(res => res.text())
+        .then(html => {
+            const doc = new DOMParser().parseFromString(html, 'text/html');
+            document.head.insertAdjacentHTML('beforeend', doc.querySelector('style').outerHTML);
+            document.body.appendChild(doc.getElementById('db-chat-icon'));
+            document.body.appendChild(doc.getElementById('db-chat-box'));
+            
+            // Asli functions ko execute karna
+            const scriptContent = doc.querySelector('script').textContent;
+            const runScript = new Function(scriptContent);
+            runScript();
+        }).catch(err => console.error("Error loading chatbot:", err));
+</script> 
 </body>
 </html>
