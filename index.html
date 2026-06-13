@@ -2957,14 +2957,29 @@
 </body>
 </html>
 
-     <script>
+    <script>
 setTimeout(() => {
-    const pId = new URLSearchParams(window.location.search).get('product');
-    if (pId && typeof productMap !== 'undefined' && productMap[pId]) {
-        openProductModal(productMap[pId]);
+    const urlParams = new URLSearchParams(window.location.search);
+    const pId = urlParams.get('product'); // URL se '?product=2' nikaalega
+    
+    if (pId) {
+        // Tarika 1: Agar Firebase me ID strictly '2' hai, to direct kholega
+        if (typeof productMap !== 'undefined' && productMap[pId]) {
+            openProductModal(productMap[pId]);
+        } 
+        // Tarika 2: Agar Firebase me dynamic IDs hain (jaise -NxY...), to list ke serial number (index) se dhoondhega
+        else if (typeof productMap !== 'undefined') {
+            const keys = Object.keys(productMap);
+            // ?product=1 se pehla product, ?product=2 se doosra product kholega
+            const targetKey = keys[parseInt(pId) - 1]; 
+            if (targetKey && productMap[targetKey]) {
+                openProductModal(productMap[targetKey]);
+            }
+        }
     }
-}, 3000);
+}, 3500); // 3.5 second ka delay taaki Firebase ka poora data load ho jaye
 </script>
+ 
 
 </body>
 </html>
