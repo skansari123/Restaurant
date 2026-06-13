@@ -2957,6 +2957,14 @@
 </body>
 </html>
 
-     
+     <script>
+setTimeout(() => {
+    const pId = new URLSearchParams(window.location.search).get('product');
+    if (pId && typeof productMap !== 'undefined' && productMap[pId]) {
+        openProductModal(productMap[pId]);
+    }
+}, 1500);
+</script>
+
 </body>
 </html>
