@@ -2980,6 +2980,33 @@ setTimeout(() => {
 }, 3500); // 3.5 second ka delay taaki Firebase ka poora data load ho jaye
 </script>
  
+<script>
+// Jaise hi HTML load ho, turant URL check karo
+(function() {
+    const pId = new URLSearchParams(window.location.search).get('product');
+    if (!pId) return;
+
+    // Firebase data aane ka wait karne ke liye ek automatic checker
+    const checkFirebaseData = setInterval(() => {
+        if (typeof productMap !== 'undefined' && Object.keys(productMap).length > 0) {
+            clearInterval(checkFirebaseData); // Data milte hi loop ko turant roko
+            
+            // Tarika 1: Direct ID match
+            if (productMap[pId]) {
+                openProductModal(productMap[pId]);
+            } 
+            // Tarika 2: Index/Serial number match (Blogger Style)
+            else {
+                const keys = Object.keys(productMap);
+                const targetKey = keys[parseInt(pId) - 1];
+                if (targetKey && productMap[targetKey]) {
+                    openProductModal(productMap[targetKey]);
+                }
+            }
+        }
+    }, 50); // Har 50ms (palkein jhapakne se bhi tez) check karega aur data aate hi modal khol dega
+})();
+</script>
 
 </body>
 </html>
